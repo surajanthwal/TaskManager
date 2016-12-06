@@ -1,0 +1,13 @@
+{
+  "name": "Suraj",
+  "version": "1.0.0",
+  "dependencies": {
+    "bootstrap": "v4.0.0-alpha.5",
+    "font-awesome": "latest",
+    "animate.css": "latest",
+    "angular": "latest",
+    "angular-route": "latest",
+    "angular-ui-router": "^0.3.2",
+    "ng-notify": "^0.8.0"
+  }
+}
