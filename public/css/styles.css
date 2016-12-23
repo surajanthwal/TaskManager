@@ -1,0 +1,44 @@
+.listView {
+    margin: 5px 0px;
+    font-size: 20px;
+
+}
+
+.listCard:hover {
+    cursor: pointer;
+}
+
+.listCard:active,.listCard:focus{
+   background-color: green;
+    border: 2px solid black;
+    border-radius: 4px;
+}
+
+.listCard {
+    height: 34px;
+    padding: 2px 10px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #d8d2d2;
+    border: 1px solid #191818;
+    border-radius: 4px;
+}
+
+.inputCard {
+    color: #e2dfdf;
+    background-color: #21638a;
+    border: 1px solid #ccc;
+    font-size: 20px;
+
+}
+
+.glyphCustom {
+    float: right;
+    font-size: small;
+    padding: 5px 1px;
+}
+
+span:hover {
+    cursor: pointer;
+}
+

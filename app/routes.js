@@ -1,4 +1,27 @@
 var User = require('./models/user');
+var mysql = require("mysql");
+
+// First you need to create a connection to the db
+var con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "masterig",
+    database: "taskManagement"
+});
+con.connect(function (err) {
+    if (err) {
+        console.log('Error connecting to Db');
+        return;
+    }
+    console.log('Connection established');
+
+});
+
+// con.end(function(err) {
+//     // The connection is terminated gracefully
+//     // Ensures all previously enqueued queries are still
+//     // before sending a COM_QUIT packet to the MySQL server.
+// });
 
 module.exports = function (app) {
 
@@ -51,9 +74,74 @@ module.exports = function (app) {
             res.json(users);
         });
     });
-    
-    app.get('*', function (req, res) {
-        res.sendfile('./public/index.html'); 
+
+    app.get('/listsAndTasks', function (req, res) {
+
+        var respArray = [];
+
+        con.query('SELECT lists.id as id,lists.title as title, tasks.id as tId,tasks.title as tTitle FROM lists INNER JOIN tasks ON tasks.listId=lists.id', function (err, rows) {
+            if (err) throw err;
+            console.log('Data received from Db:\n');
+            console.log(rows);
+            var obj = {};
+            obj.tasks = [];
+            var task = {};
+            for (var i = 0; i < rows.length; i++) {
+
+                if (i == 0) {
+                    obj.id = rows[i].id;
+                    obj.title = rows[i].title;
+                    task.id = rows[i].tId;
+                    task.title = rows[i].tTitle;
+                    obj.tasks.push(task);
+                } else {
+                    if (rows[i].id == rows[i - 1].id) {
+                        task = {};
+                        task.id = rows[i].tId;
+                        task.title = rows[i].tTitle;
+                        obj.tasks.push(task);
+
+                    } else {
+                        respArray.push(obj);
+                        obj = {};
+                        obj.tasks = [];
+                        task = {};
+
+                        obj.id = rows[i].id;
+                        obj.title = rows[i].title;
+                        task.id = rows[i].tId;
+                        task.title = rows[i].tTitle;
+                        obj.tasks.push(task);
+                    }
+
+
+                }
+                if (i == rows.length - 1) {
+                    respArray.push(obj);
+                }
+
+            }
+            res.send(respArray);
+        });
     });
 
+    app.post('/createList', function (req, res) {
+
+
+    });
+    app.get('*', function (req, res) {
+        res.sendfile('./public/index.html');
+    });
+
+
 };
+
+
+// for (var i = 0; i < respArray.length; i++) {
+//     console.log(respArray[i].id + " " + respArray[i].title);
+//     console.log(respArray[i].tasks);
+//     // for (var j = 0; j < respArray[i].tasks.length; j++) {
+//     //     // console.log(respArray[i].tasks[j]);
+//     // }
+//
+// }

@@ -1,0 +1,63 @@
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+
+<div style="margin-top: 15px;height: 600px;background: #21638a;">
+    <div class=" row" style="height: 50px;border: 1px solid black;background: #21638a;">
+        <button  type="button" class="btn btn-primary" style="display: inline;
+    margin: 6px;" ng-click="vm.booleanNewList=true;">Add List&nbsp;&nbsp;<span class="glyphicon glyphicon-plus"
+                                                                               style="    color: black;"></span>
+        </button>
+        <H3 style="display: inline;
+    text-align: center;
+    padding-top: 6px;
+    margin-left: 400px;color: white;"> Task Manager</H3>
+        <button type="button" ng-click="vm.booleanNewTask=true;" class="btn btn-primary" style="display: inline;
+    float: right;
+    margin: 6px;">Add task&nbsp;&nbsp;<span class="glyphicon glyphicon-plus" style="    color: black;"></span></button>
+    </div>
+
+    <div class="row" style="
+    height: 550px;
+    border: 1px solid black;background: #21638a;">
+        <div class="col-md-3" style="border: 1px solid black;height: 550px">
+
+            <input ng-show="vm.booleanNewList" type="text" class="inputCard listView form-control"
+                   placeholder="Please Enter list title..."
+                   ng-model="vm.newList" ng-enter="vm.saveNewList()" autofocus>
+
+            <div class="listView" ng-repeat="list in vm.lists">
+
+                <div id="idCard" class="listCard" ng-show="!list.booleanEdit">{{list.title}}
+                    <span ng-click="vm.trashList(list)" class="glyphCustom glyphicon glyphicon-trash"
+                          style="margin-right: -5px"></span>
+                    <span ng-click="vm.editList(list)" class=" glyphCustom glyphicon glyphicon-pencil"></span>
+                </div>
+
+                <input ng-show="list.booleanEdit" type="text" class="inputCard form-control"
+                       placeholder="{{list.title}}"
+                       ng-model="vm.inputList" ng-enter="vm.saveList(list)" focus="true">
+            </div>
+
+        </div>
+
+        <div class="col-md-9" style="border: 1px solid black;height: 550px">
+
+            <input ng-show="vm.booleanNewTask" type="text" class="inputCard listView form-control"
+                   placeholder="Please Enter task title..."
+                   ng-model="vm.newTask" ng-enter="vm.saveNewTask()" autofocus>
+
+            <div class="listView" ng-repeat="task in vm.tasks">
+
+                <div class="listCard" ng-show="!task.booleanEdit">{{task.title}}
+                    <span ng-click="vm.trashTask(task)" class="glyphCustom glyphicon glyphicon-trash"
+                          style="margin-right: -5px"></span>
+                    <span ng-click="vm.editTask(task)" class=" glyphCustom glyphicon glyphicon-pencil"></span>
+                </div>
+
+                <input ng-show="task.booleanEdit" type="text" class="inputCard form-control"
+                       placeholder="{{task.title}}"
+                       ng-model="vm.inputTask" ng-enter="vm.saveTask(task)" autofocus>
+            </div>
+        </div>
+
+    </div>
+</div>

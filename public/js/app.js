@@ -1,27 +1,34 @@
 // public/js/app.js
 angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
-    .directive('dobasync', function () {
-        return {
-            require: 'ngModel',
-            link: function (scope, elm, attrs, ctrl) {
-                ctrl.$validators.dobasync = function (modelValue, viewValue) {
-                    var birthDate = new Date();
-
-                    birthDate.setFullYear(viewValue.substring(0, viewValue.indexOf("-")));
-                    birthDate.setMonth(viewValue.substring(viewValue.indexOf("-") + 1, viewValue.lastIndexOf("-")) - 1);
-                    birthDate.setDate(viewValue.substring(viewValue.lastIndexOf("-") + 1, viewValue.length));
-
-                    var currentDate = new Date();
-
-                    if (birthDate >= currentDate) {
-                        
-                        return false;
-                    }
-                    return true;
-                };
-            }
+    .directive('ngEnter', function () {
+        return function (scope, element, attrs) {
+            element.bind("keydown keypress", function (event) {
+                if (event.which === 13) {
+                    scope.$apply(function () {
+                        scope.$eval(attrs.ngEnter)
+                    });
+                    event.preventDefault();
+                }
+            });
         };
     })
+    .directive('focus',
+        function ($timeout) {
+            return {
+                scope: {
+                    trigger: '@focus'
+                },
+                link: function (scope, element) {
+                    scope.$watch('trigger', function (value) {
+                        if (value === "true") {
+                            $timeout(function () {
+                                element[0].focus();
+                            });
+                        }
+                    });
+                }
+            };
+        })
     .filter('searchFilter', function () {
         return function (input, option) {
             if (option == null || option.trim() == "") {
@@ -38,5 +45,18 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
                 return array;
             }
 
+        }
+    })
+    .factory('TaskService', function ($http) {
+        return {
+            getListsAndTasks: function () {
+                return $http.get('/listsAndTasks')
+                    .then(function (result) {
+                        console.log("Data inside service:");
+                        console.log(result);
+                        //resolve the promise as the data
+                        return result.data;
+                    });
+            }
         }
     });

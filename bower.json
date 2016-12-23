@@ -2,7 +2,7 @@
   "name": "Suraj",
   "version": "1.0.0",
   "dependencies": {
-    "bootstrap": "v4.0.0-alpha.5",
+    "bootstrap": "3.3.7",
     "font-awesome": "latest",
     "animate.css": "latest",
     "angular": "latest",

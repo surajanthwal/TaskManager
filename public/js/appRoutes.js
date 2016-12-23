@@ -2,10 +2,10 @@
 angular.module('appRoutes', ['ui.router']).config(['$stateProvider', '$routeProvider', '$locationProvider','$httpProvider', function ($stateProvider, $routeProvider, $locationProvider,$httpProvider) {
 
     $stateProvider
-        .state('patientInfo', {
+        .state('taskList', {
             url: '/',
-            controller: 'PatientController as vm',
-            templateUrl: 'views/patientInfo.html'
+            controller: 'TaskController as vm',
+            templateUrl: 'views/homeScreen.html'
         })
         .state('patients', {
             url:'/allPatients',
