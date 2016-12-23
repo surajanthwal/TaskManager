@@ -42,3 +42,11 @@ span:hover {
     cursor: pointer;
 }
 
+.searchClass{
+    width: 20%;
+    background: #21638A;
+    font-size: large;
+    color: white;
+    float: right;
+}
+

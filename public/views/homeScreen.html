@@ -24,9 +24,10 @@
 
             <input ng-show="vm.booleanNewList" type="text" class="inputCard listView form-control"
                    placeholder="Please Enter list title..."
-                   ng-model="vm.newList" ng-enter="vm.saveNewList()" >
+                   ng-model="vm.newList" ng-enter="vm.saveNewList()">
 
-            <span ng-show="vm.booleanNewList" ng-click="vm.booleanNewList=false" class=" glyphCustom glyphicon glyphicon-remove" style="margin-top: -35px;
+            <span ng-show="vm.booleanNewList" ng-click="vm.booleanNewList=false"
+                  class=" glyphCustom glyphicon glyphicon-remove" style="margin-top: -35px;
     margin-right: 5px;"></span>
 
             <div class="listView" ng-repeat="list in vm.lists">
@@ -54,11 +55,12 @@
             <input ng-show="vm.booleanNewTask" type="text" class="inputCard listView form-control"
                    placeholder="Please Enter task title..."
                    ng-model="vm.newTask" ng-enter="vm.saveNewTask()" autofocus>
-            <span  ng-show="vm.booleanNewTask" ng-click="vm.booleanNewTask=false" class=" glyphCustom glyphicon glyphicon-remove" style="margin-top: -35px;
+            <span ng-show="vm.booleanNewTask" ng-click="vm.booleanNewTask=false"
+                  class=" glyphCustom glyphicon glyphicon-remove" style="margin-top: -35px;
     margin-right: 5px;"></span>
 
 
-            <div class="listView" ng-repeat="task in vm.tasks">
+            <div class="listView" ng-repeat="task in vm.tasks | searchFilter:vm.search">
 
                 <div class="listCard" ng-show="!task.booleanEdit">{{task.title}}
                     <span ng-click="vm.trashTask(task)" class="glyphCustom glyphicon glyphicon-trash"
@@ -70,7 +72,8 @@
                        placeholder="{{task.title}}"
                        ng-model="vm.inputTask" ng-enter="vm.saveTask(task)" autofocus>
             </div>
-        </div>
 
+            <input type="text" ng-model="vm.search" class="form-control searchClass" placeholder="Search task..." >
+        </div>
     </div>
 </div>

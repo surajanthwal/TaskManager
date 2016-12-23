@@ -35,21 +35,20 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
 
     //filter for doing the keyword search for all the tasks in the selected list
     .filter('searchFilter', function () {
-        return function (input, option) {
-            if (option == null || option.trim() == "") {
-                return input
+        return function (input, keyword) {
+            if (keyword == null || keyword.trim() == "") {
+                return input;
             }
             else {
                 var array = [];
-                option = option.trim();
-                option = option.toLowerCase();
+                keyword = keyword.trim();
+                keyword = keyword.toLowerCase();
                 for (var i = 0; i < input.length; i++) {
-                    if (input[i].firstName.toLowerCase().indexOf(option) != -1)
+                    if (input[i].title.toLowerCase().indexOf(keyword) != -1)
                         array.push(input[i]);
                 }
                 return array;
             }
-
         }
     })
 
@@ -77,11 +76,11 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
             createTask: function (task) {
                 return $http.post('/createTask', {"title": task.title, "listId": task.listId});
             },
-            getListDetails:function (list) {
+            getListDetails: function (list) {
                 return $http.post('/getListDetails', {"title": list.title});
 
             },
-            getTaskDetails:function (task) {
+            getTaskDetails: function (task) {
                 return $http.post('/getTaskDetails', {"title": task.title});
 
             }
