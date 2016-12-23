@@ -75,6 +75,7 @@ module.exports = function (app) {
         });
     });
 
+    //Read operation for both tasks and lists
     app.get('/listsAndTasks', function (req, res) {
 
         var respArray = [];
@@ -125,10 +126,74 @@ module.exports = function (app) {
         });
     });
 
+    //Create operation for List
     app.post('/createList', function (req, res) {
 
+        var jsonObject = req.body;
+
+        con.query('INSERT INTO lists SET ?', req.body, function (err, results) {
+            if (err) throw err;
+
+            res.send('hogya kaam');
+        });
+    });
+
+   //Create operation for Task
+    app.post('/createTask', function (req, res) {
+
+        var jsonObject = req.body;
+
+        con.query('INSERT INTO tasks SET ?', req.body, function (err, results) {
+            if (err) throw err;
+
+            res.send('hogya kaam');
+        });
+    });
+
+    //Update operation for list
+    app.post('/updateList', function (req, res) {
+
+        var jsonObject = req.body;
+
+        con.query('UPDATE lists SET title = ? Where iD = ?', [req.body.title, req.body.id], function (err, results) {
+            if (err) throw err;
+
+            res.send('hogya kaam');
+        });
+    });
+
+    //Update operation for task
+    app.post('/updateTask', function (req, res) {
+
+        var jsonObject = req.body;
+
+        con.query('UPDATE tasks SET title = ?,listId = ? Where iD = ?', [req.body.title, req.body.listId, req.body.id], function (err, results) {
+            if (err) throw err;
+
+            res.send('hogya kaam');
+        });
+    });
+
+    //Delete operation for List
+    app.post('/deleteList', function (req, res) {
+        con.query('DELETE FROM lists WHERE id = ?', [req.body.id], function (err, result) {
+            if (err) throw err;
+            res.send('hogya kaam');
+        });
 
     });
+
+    //Delete operation for task
+    app.post('/deleteTask', function (req, res) {
+        var jsonObject = req.body;
+        con.query('DELETE FROM tasks WHERE id = ?', [req.body.id], function (err, result) {
+            if (err) throw err;
+            res.send('hogya kaam');
+        });
+
+    });
+
+
     app.get('*', function (req, res) {
         res.sendfile('./public/index.html');
     });
