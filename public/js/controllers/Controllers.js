@@ -75,8 +75,14 @@ angular.module('MainCtrl', ['ngNotify'])
                 console.log("task deleted");
                 TaskService.deleteTask(task.id);
                 angular.forEach(vm.currentList.tasks, function (value, key) {
-                    if (vm.currentList.tasks[key].id == task.id)
+                    if (vm.currentList.tasks[key].id == task.id) {
                         vm.currentList.tasks.splice(key, 1);
+                    }
+                });
+                angular.forEach(vm.tasks, function (value, key) {
+                    if (vm.tasks[key].id == task.id) {
+                        vm.tasks.splice(key, 1);
+                    }
                 });
 
             };
