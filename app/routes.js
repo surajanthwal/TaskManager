@@ -27,7 +27,7 @@ module.exports = function (app) {
         con.query('SELECT lists.id as id,lists.title as title, tasks.id as tId,tasks.title as tTitle FROM lists INNER JOIN tasks ON tasks.listId=lists.id', function (err, rows) {
             if (err) throw err;
             console.log('Data received from Db:\n');
-            console.log(rows);
+            // console.log(rows);
             var obj = {};
             obj.tasks = [];
             var task = {};
@@ -37,6 +37,7 @@ module.exports = function (app) {
                     obj.id = rows[i].id;
                     obj.title = rows[i].title;
                     task.id = rows[i].tId;
+                    task.listId = rows[i].id;
                     task.title = rows[i].tTitle;
                     obj.tasks.push(task);
                 } else {
@@ -44,6 +45,7 @@ module.exports = function (app) {
                         task = {};
                         task.id = rows[i].tId;
                         task.title = rows[i].tTitle;
+                        task.listId = rows[i].id;
                         obj.tasks.push(task);
 
                     } else {
@@ -56,6 +58,7 @@ module.exports = function (app) {
                         obj.title = rows[i].title;
                         task.id = rows[i].tId;
                         task.title = rows[i].tTitle;
+                        task.listId = rows[i].id;
                         obj.tasks.push(task);
                     }
 
@@ -112,7 +115,14 @@ module.exports = function (app) {
         });
 
     });
+    app.post('/getListDetails', function (req, res) {
+        con.query('SELECT lists.id as id,lists.title as title FROM lists where title = ?', [req.body.title], function (err, rows) {
+            if (err) throw err;
+            console.log(rows);
+            res.send(rows[0]);
+        });
 
+    });
     //Delete operation for task
     app.post('/deleteTask', function (req, res) {
         var jsonObject = req.body;
@@ -123,9 +133,10 @@ module.exports = function (app) {
 
     });
 
+
 //serving initial file from server which is index.html
     app.get('*', function (req, res) {
         res.sendfile('./public/index.html');
     });
-    
+
 };

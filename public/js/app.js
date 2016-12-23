@@ -1,6 +1,6 @@
 // main module file for including all the custom modules.
 angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
-    //directive for using enter to save
+//directive for using enter to save
     .directive('ngEnter', function () {
         return function (scope, element, attrs) {
             element.bind("keydown keypress", function (event) {
@@ -13,7 +13,7 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
             });
         };
     })
-    
+
     //directive for focus on input element
     .directive('focus',
         function ($timeout) {
@@ -32,7 +32,7 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
                 }
             };
         })
-    
+
     //filter for doing the keyword search for all the tasks in the selected list
     .filter('searchFilter', function () {
         return function (input, option) {
@@ -52,18 +52,34 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
 
         }
     })
-    
+
     //for doing all AJAX call from front end to node server
     .factory('TaskService', function ($http) {
         return {
             getListsAndTasks: function () {
-                return $http.get('/listsAndTasks')
-                    .then(function (result) {
-                        console.log("Data inside service:");
-                        console.log(result);
-                        //resolve the promise as the data
-                        return result.data;
-                    });
+                return $http.get('/listsAndTasks');
+            },
+            deleteList: function (id) {
+                return $http.post('/deleteList', {"id": id});
+            },
+            deleteTask: function (id) {
+                return $http.post('/deleteTask', {"id": id});
+            },
+            updateList: function (list) {
+                return $http.post('/updateList', {"id": list.id, "title": list.title});
+            },
+            updateTask: function (task) {
+                return $http.post('/updateTask', {"id": task.id, "title": task.title, "listId": task.listId});
+            },
+            createList: function (list) {
+                return $http.post('/createList', {"title": list.title});
+            },
+            createTask: function (task) {
+                return $http.post('/createTask', {"title": task.title, "listId": task.listId});
+            },
+            getListDetails:function (list) {
+                return $http.post('/getListDetails', {"title": list.title});
+
             }
         }
     });

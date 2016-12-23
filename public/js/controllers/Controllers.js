@@ -1,66 +1,88 @@
-
-// The appliction logic part is in this main controller module 
+// The appliction logic part is in this main controller module
 angular.module('MainCtrl', ['ngNotify'])
-    //Controller for all activities in the home screen
+//Controller for all activities in the home screen
     .controller('TaskController', ['$scope', '$http', 'TaskService',
         function ($scope, $http, TaskService) {
             var vm = this;
+
             //initialising all the variables
             vm.newList = "";
             vm.newTask = "";
             vm.booleanNewList = false;
             vm.booleanNewTask = false;
-            vm.lists = [{
-                id: 1,
-                booleanEdit: false,
-                title: "Swimming late night"
-            }, {
-                id: 1,
-                booleanEdit: false,
-                title: "Gymming early morning"
-            }, {
-                id: 1,
-                booleanEdit: false,
-                title: "Football @2pm"
-            }, {
-                id: 1,
-                booleanEdit: false,
-                title: "Bornfire @2am"
-            }];
-            vm.tasks = [{
-                id: 1,
-                listId: 1,
-                booleanEdit: false,
-                title: "Buying new sport shoes"
-            }, {
-                id: 1,
-                listId: 1,
-                booleanEdit: false,
-                title: "Online Sale on Amazon"
-            }, {
-                id: 1,
-                listId: 1,
-                booleanEdit: false,
-                title: "Watching a new romcom"
-            }, {
-                id: 1,
-                listId: 1,
-                booleanEdit: false,
-                title: "New Guitar Strings"
-            }];
-            console.log(TaskService.getListsAndTasks());
+            vm.lists = [];
+            vm.tasks = [];
+            vm.currentList = {};
 
-            vm.trashList = function (list) {
+
+            //server call using Task Service to get all the list and tasks
+            TaskService.getListsAndTasks().then(function (result) {
+                angular.forEach(result.data, function (value, key) {
+                    result.data[key].booleanSelected = false;
+                });
+
+                console.log(result.data);
+                vm.lists = result.data;
+                if (vm.lists.length > 0) {
+                    vm.lists[0].booleanSelected = true;
+                    vm.tasks = vm.lists[0].tasks;
+                }
+
+            });
+
+
+            //Showing tasks for the selected list
+            vm.selectList = function (list) {
+                vm.currentList = list;
+                angular.forEach(vm.lists, function (value, key) {
+                    vm.lists[key].booleanSelected = false;
+                });
+                list.booleanSelected = true;
                 console.log(list);
+                if (list.tasks)
+                    vm.tasks = list.tasks;
+                else
+                    vm.tasks = [];
             };
-            vm.trashTask = function (task) {
-                console.log(task);
+
+            //deleting List from the server using Task Service
+            vm.trashList = function (list) {
+
+
+                angular.forEach(list.tasks, function (value, key) {
+                    if (list.tasks[key].listId == list.id) {
+                        vm.trashTask(list.tasks[key]);
+                    }
+                });
+
+                angular.forEach(vm.lists, function (value, key) {
+                    if (vm.lists[key].id == list.id) {
+                        vm.lists.splice(key, 1);
+                    }
+                });
+
+                TaskService.deleteList(list.id);
+
+                vm.tasks = [];
+                console.log(vm.tasks);
 
             };
+
+            //deleting task from server
+            vm.trashTask = function (task) {
+                TaskService.deleteTask(task.id);
+                angular.forEach(vm.currentList.tasks, function (value, key) {
+                    if (vm.currentList.tasks[key].id == task.id)
+                        vm.currentList.tasks.splice(key, 1);
+                });
+
+            };
+
             vm.editList = function (list) {
                 list.booleanEdit = true;
                 vm.inputList = list.title;
             };
+
             vm.editTask = function (task) {
                 task.booleanEdit = true;
                 vm.inputTask = task.title;
@@ -72,9 +94,12 @@ angular.module('MainCtrl', ['ngNotify'])
                     vm.inputList = list.title;
 
                 } else {
+                    vm.inputList = vm.inputList.trim();
                     list.title = vm.inputList;
                 }
                 list.booleanEdit = false;
+
+                TaskService.updateList(list);
             };
 
             vm.saveTask = function (task) {
@@ -84,9 +109,12 @@ angular.module('MainCtrl', ['ngNotify'])
                     vm.inputTask = task.title;
 
                 } else {
+                    vm.inputTask = vm.inputTask.trim();
                     task.title = vm.inputTask;
                 }
                 task.booleanEdit = false;
+                TaskService.updateTask(task);
+
             };
 
             vm.saveNewList = function () {
@@ -97,8 +125,24 @@ angular.module('MainCtrl', ['ngNotify'])
                     return;
                 }
                 var list = {};
+                vm.newList = vm.newList.trim();
+
                 list.title = vm.newList;
-                vm.lists.unshift(list);
+                if (vm.lists.length == 0)
+                    vm.lists.push(list);
+                else
+                    vm.lists.unshift(list);
+
+
+                TaskService.createList(list).then(function (data) {
+                    TaskService.getListDetails(list).then(function (result) {
+                        list.id = result.data.id;
+                        vm.selectList(list);
+                        console.log("Callback: ");
+                        console.log(list);
+
+                    });
+                });
                 vm.newList = "";
                 vm.booleanNewList = false;
             };
@@ -110,28 +154,25 @@ angular.module('MainCtrl', ['ngNotify'])
                     vm.newTask = "";
                     return;
                 }
-                var list = {};
-                list.title = vm.newTask;
-                vm.tasks.unshift(list);
-                vm.newTask = "";
-                vm.booleanNewTask = false;
+                var task = {};
+                task.title = vm.newTask;
+
+                TaskService.getListDetails(vm.currentList).then(function (result) {
+                    vm.currentList.id = result.data.id;
+                    task.listId = vm.currentList.id;
+
+                    if (vm.tasks.length == 0)
+                        vm.tasks.push(task);
+                    else
+                        vm.tasks.unshift(task);
+
+                    if (!vm.currentList.tasks)
+                        vm.currentList.tasks = [];
+                    vm.currentList.tasks.push(task);
+                    TaskService.createTask(task);
+                    vm.newTask = "";
+                    vm.booleanNewTask = false;
+                });
             };
 
-            vm.user = {};
-            vm.gender = ["Male", "Female"];
-            vm.setAge = function () {
-                vm.user.age = new Date().getFullYear() - vm.user.dob.getFullYear();
-            };
-
-            vm.submitForm = function () {
-
-                $http.post('/registerUser', {'data': vm.user}).then(function (response) {
-                        ngNotify.set(response.data);
-                    },
-                    function (err) { // optional
-                        console.log("Error");// failed
-                    }
-                );
-
-            };
         }]);
