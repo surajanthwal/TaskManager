@@ -51,6 +51,8 @@ angular.module('MainCtrl', ['ngNotify'])
 
                 angular.forEach(list.tasks, function (value, key) {
                     if (list.tasks[key].listId == list.id) {
+                        console.log("task:");
+                        console.log(list.tasks[key]);
                         vm.trashTask(list.tasks[key]);
                     }
                 });
@@ -70,6 +72,7 @@ angular.module('MainCtrl', ['ngNotify'])
 
             //deleting task from server
             vm.trashTask = function (task) {
+                console.log("task deleted");
                 TaskService.deleteTask(task.id);
                 angular.forEach(vm.currentList.tasks, function (value, key) {
                     if (vm.currentList.tasks[key].id == task.id)
@@ -160,16 +163,22 @@ angular.module('MainCtrl', ['ngNotify'])
                 TaskService.getListDetails(vm.currentList).then(function (result) {
                     vm.currentList.id = result.data.id;
                     task.listId = vm.currentList.id;
+                    TaskService.createTask(task).then(function (data) {
+                        TaskService.getTaskDetails(task).then(function (result) {
+                            task.id = result.data.id;
+                            if (vm.tasks.length == 0)
+                                vm.tasks.push(task);
+                            else
+                                vm.tasks.unshift(task);
 
-                    if (vm.tasks.length == 0)
-                        vm.tasks.push(task);
-                    else
-                        vm.tasks.unshift(task);
+                            if (!vm.currentList.tasks)
+                                vm.currentList.tasks = [];
+                            vm.currentList.tasks.push(task);
+                            console.log(task);
+                        });
+                    });
 
-                    if (!vm.currentList.tasks)
-                        vm.currentList.tasks = [];
-                    vm.currentList.tasks.push(task);
-                    TaskService.createTask(task);
+
                     vm.newTask = "";
                     vm.booleanNewTask = false;
                 });

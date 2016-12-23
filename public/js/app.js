@@ -80,6 +80,10 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
             getListDetails:function (list) {
                 return $http.post('/getListDetails', {"title": list.title});
 
+            },
+            getTaskDetails:function (task) {
+                return $http.post('/getTaskDetails', {"title": task.title});
+
             }
         }
     });

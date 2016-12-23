@@ -123,6 +123,14 @@ module.exports = function (app) {
         });
 
     });
+    app.post('/getTaskDetails', function (req, res) {
+        con.query('SELECT tasks.id as id,tasks.title as title FROM tasks where title = ?', [req.body.title], function (err, rows) {
+            if (err) throw err;
+            console.log(rows);
+            res.send(rows[0]);
+        });
+
+    });
     //Delete operation for task
     app.post('/deleteTask', function (req, res) {
         var jsonObject = req.body;

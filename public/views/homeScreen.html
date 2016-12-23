@@ -10,6 +10,8 @@
     text-align: center;
     padding-top: 6px;
     margin-left: 400px;color: white;"> Task Manager</H3>
+        <!--<h6>Add any list and corresponding tasks inside the list</h6>-->
+
         <button type="button" ng-click="vm.booleanNewTask=true;" class="btn btn-primary" style="display: inline;
     float: right;
     margin: 6px;">Add task&nbsp;&nbsp;<span class="glyphicon glyphicon-plus" style="    color: black;"></span></button>
@@ -22,7 +24,10 @@
 
             <input ng-show="vm.booleanNewList" type="text" class="inputCard listView form-control"
                    placeholder="Please Enter list title..."
-                   ng-model="vm.newList" ng-enter="vm.saveNewList()" autofocus>
+                   ng-model="vm.newList" ng-enter="vm.saveNewList()" >
+
+            <span ng-show="vm.booleanNewList" ng-click="vm.booleanNewList=false" class=" glyphCustom glyphicon glyphicon-remove" style="margin-top: -35px;
+    margin-right: 5px;"></span>
 
             <div class="listView" ng-repeat="list in vm.lists">
 
@@ -49,6 +54,9 @@
             <input ng-show="vm.booleanNewTask" type="text" class="inputCard listView form-control"
                    placeholder="Please Enter task title..."
                    ng-model="vm.newTask" ng-enter="vm.saveNewTask()" autofocus>
+            <span  ng-show="vm.booleanNewTask" ng-click="vm.booleanNewTask=false" class=" glyphCustom glyphicon glyphicon-remove" style="margin-top: -35px;
+    margin-right: 5px;"></span>
+
 
             <div class="listView" ng-repeat="task in vm.tasks">
 
