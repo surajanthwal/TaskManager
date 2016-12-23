@@ -1,8 +1,11 @@
-// public/js/controllers/MainCtrl.js
+
+// The appliction logic part is in this main controller module 
 angular.module('MainCtrl', ['ngNotify'])
+    //Controller for all activities in the home screen
     .controller('TaskController', ['$scope', '$http', 'TaskService',
         function ($scope, $http, TaskService) {
             var vm = this;
+            //initialising all the variables
             vm.newList = "";
             vm.newTask = "";
             vm.booleanNewList = false;
@@ -131,17 +134,4 @@ angular.module('MainCtrl', ['ngNotify'])
                 );
 
             };
-        }])
-    .controller('AllPatients', ['$scope', 'allUsers', function ($scope, allUsers) {
-        var vm = this;
-        vm.patients = allUsers.data;
-        for (var i = 0; i < allUsers.data.length; i++) {
-            var date = new Date(allUsers.data[i].dob);
-            var day = date.getDate();
-            var month = date.getMonth() + 1;
-            var year = date.getFullYear();
-            vm.patients[i].dob = day + "/" + month + "/" + year;
-        }
-
-
-    }]);
+        }]);

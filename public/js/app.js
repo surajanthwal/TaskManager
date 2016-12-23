@@ -1,5 +1,6 @@
-// public/js/app.js
+// main module file for including all the custom modules.
 angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
+    //directive for using enter to save
     .directive('ngEnter', function () {
         return function (scope, element, attrs) {
             element.bind("keydown keypress", function (event) {
@@ -12,6 +13,8 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
             });
         };
     })
+    
+    //directive for focus on input element
     .directive('focus',
         function ($timeout) {
             return {
@@ -29,6 +32,8 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
                 }
             };
         })
+    
+    //filter for doing the keyword search for all the tasks in the selected list
     .filter('searchFilter', function () {
         return function (input, option) {
             if (option == null || option.trim() == "") {
@@ -47,6 +52,8 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
 
         }
     })
+    
+    //for doing all AJAX call from front end to node server
     .factory('TaskService', function ($http) {
         return {
             getListsAndTasks: function () {
