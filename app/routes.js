@@ -21,7 +21,7 @@ con.connect(function (err) {
 //for handling all the requests from client
 module.exports = function (app) {
 
-    //Read operation for both tasks and lists
+    //Read operation for both tasks and lists and sending list as a json object
     app.get('/listsAndTasks', function (req, res) {
         var respArray = [];
         con.query('SELECT lists.id as id,lists.title as title, tasks.id as tId,tasks.title as tTitle FROM lists INNER JOIN tasks ON tasks.listId=lists.id', function (err, rows) {
@@ -111,10 +111,14 @@ module.exports = function (app) {
     app.post('/deleteList', function (req, res) {
         con.query('DELETE FROM lists WHERE id = ?', [req.body.id], function (err, result) {
             if (err) throw err;
-            res.send('hogya kaam');
+            con.query('DELETE FROM tasks WHERE listId = ?', [req.body.id], function (err, result) {
+                res.send('hogya kaam');
+            });
         });
 
     });
+
+    //Getting list detais for requested list
     app.post('/getListDetails', function (req, res) {
         con.query('SELECT lists.id as id,lists.title as title FROM lists where title = ?', [req.body.title], function (err, rows) {
             if (err) throw err;
@@ -123,6 +127,8 @@ module.exports = function (app) {
         });
 
     });
+
+    //Getting task details for requested task
     app.post('/getTaskDetails', function (req, res) {
         con.query('SELECT tasks.id as id,tasks.title as title FROM tasks where title = ?', [req.body.title], function (err, rows) {
             if (err) throw err;
@@ -131,6 +137,7 @@ module.exports = function (app) {
         });
 
     });
+
     //Delete operation for task
     app.post('/deleteTask', function (req, res) {
         var jsonObject = req.body;
@@ -140,8 +147,7 @@ module.exports = function (app) {
         });
 
     });
-
-
+    
 //serving initial file from server which is index.html
     app.get('*', function (req, res) {
         res.sendfile('./public/index.html');

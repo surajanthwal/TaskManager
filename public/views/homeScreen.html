@@ -22,9 +22,9 @@
     border: 1px solid black;background: #21638a;">
         <div class="col-md-3" style="border: 1px solid black;height: 550px">
 
-            <input ng-show="vm.booleanNewList" type="text" class="inputCard listView form-control"
+            <input id="inputListId" ng-show="vm.booleanNewList" type="text" class="inputCard listView form-control"
                    placeholder="Please Enter list title..."
-                   ng-model="vm.newList" ng-enter="vm.saveNewList()">
+                   ng-model="vm.newList" ng-enter="vm.saveNewList()" autofocus>
 
             <span ng-show="vm.booleanNewList" ng-click="vm.booleanNewList=false"
                   class=" glyphCustom glyphicon glyphicon-remove" style="margin-top: -35px;

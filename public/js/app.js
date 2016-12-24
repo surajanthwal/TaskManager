@@ -13,26 +13,6 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
             });
         };
     })
-
-    //directive for focus on input element
-    .directive('focus',
-        function ($timeout) {
-            return {
-                scope: {
-                    trigger: '@focus'
-                },
-                link: function (scope, element) {
-                    scope.$watch('trigger', function (value) {
-                        if (value === "true") {
-                            $timeout(function () {
-                                element[0].focus();
-                            });
-                        }
-                    });
-                }
-            };
-        })
-
     //filter for doing the keyword search for all the tasks in the selected list
     .filter('searchFilter', function () {
         return function (input, keyword) {
@@ -85,4 +65,22 @@ angular.module('MyApp', ['ngRoute', 'appRoutes', 'MainCtrl'])
 
             }
         }
-    });
+    })
+    //directive for focus on input element
+    .directive('focus',
+        function ($timeout) {
+            return {
+                scope: {
+                    trigger: '@focus'
+                },
+                link: function (scope, element) {
+                    scope.$watch('trigger', function (value) {
+                        if (value === "true") {
+                            $timeout(function () {
+                                element[0].focus();
+                            });
+                        }
+                    });
+                }
+            };
+        });
